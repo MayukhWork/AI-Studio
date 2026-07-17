@@ -1,0 +1,14 @@
+node_modules/
+.pnpm-store/
+.turbo/
+dist/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+pnpm-debug.log*
+*.log
+artifacts/
+playwright-report/
+test-results/

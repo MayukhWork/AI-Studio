@@ -1,0 +1,25 @@
+{
+  "name": "@ai3d/checkpoints",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Checkpoint creation, verification, restoration, and retention contracts.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "clean": "rimraf dist",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  }
+}
