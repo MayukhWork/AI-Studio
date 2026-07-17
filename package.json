@@ -39,7 +39,7 @@
     "vitest": "^3.2.4"
   },
   "lint-staged": {
-    "*.{js,mjs,cjs,ts,mts,cts}": [
+    "*.{ts,mts,cts}": [
       "eslint --fix",
       "prettier --write"
     ],

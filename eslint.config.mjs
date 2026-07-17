@@ -1,17 +1,29 @@
 import eslint from '@eslint/js';
-import importX from 'eslint-plugin-import-x';
+import { flatConfigs as importXFlatConfigs } from 'eslint-plugin-import-x';
 import prettier from 'eslint-config-prettier';
 import tseslint from 'typescript-eslint';
+
+const typescriptFiles = ['**/*.{ts,mts,cts}'];
 
 export default tseslint.config(
   {
     ignores: ['**/dist/**', '**/coverage/**', '**/node_modules/**', '.turbo/**'],
   },
   eslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  importX.flatConfigs.recommended,
   {
-    files: ['**/*.ts'],
+    files: ['**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+  },
+  ...tseslint.configs.recommendedTypeChecked.map((configuration) => ({
+    ...configuration,
+    files: typescriptFiles,
+  })),
+  importXFlatConfigs.recommended,
+  {
+    files: typescriptFiles,
     languageOptions: {
       parserOptions: {
         projectService: true,
