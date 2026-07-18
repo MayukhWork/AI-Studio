@@ -1,15 +1,15 @@
 # @ai3d/desktop
 
-Desktop presentation client boundary placeholder.
+Desktop presentation client boundary.
 
-## Milestone 1 status
+## Milestone 2 responsibility
 
-This package is an intentionally empty, documented public-interface boundary. It contains no business logic, infrastructure adapter, AI behavior, Blender integration, or persistence implementation.
+`DesktopClient` is a framework-independent presentation adapter that forwards
+entered prompts to `ApplicationFacade` and returns a UI-ready result. No desktop
+framework has been selected, so this package intentionally has no window or widget
+implementation. It does not call Blender directly.
 
 ## Architectural placement
 
-This is a presentation-layer placeholder. It will consume `@ai3d/application` and must not contain business logic.
-
-## Public interface
-
-See [src/index.ts](src/index.ts). Public members are documented before implementation begins.
+An eventual Electron, Tauri, or other desktop shell consumes this package and the
+application API rather than duplicating business logic.

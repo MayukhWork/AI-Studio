@@ -53,15 +53,46 @@ importers:
         specifier: ^3.2.4
         version: 3.2.7(@types/node@22.20.1)(yaml@2.9.0)
 
-  apps/cli: {}
+  apps/cli:
+    dependencies:
+      '@ai3d/ai-gateway':
+        specifier: workspace:*
+        version: link:../../packages/ai-gateway
+      '@ai3d/application':
+        specifier: workspace:*
+        version: link:../../packages/application
+      '@ai3d/orchestrator':
+        specifier: workspace:*
+        version: link:../../packages/orchestrator
+      '@ai3d/plugin-engine-blender-local':
+        specifier: workspace:*
+        version: link:../../plugins/engine-blender-local
+      '@ai3d/workflow-engine':
+        specifier: workspace:*
+        version: link:../../packages/workflow-engine
 
-  apps/desktop: {}
+  apps/desktop:
+    dependencies:
+      '@ai3d/application':
+        specifier: workspace:*
+        version: link:../../packages/application
+      '@ai3d/orchestrator':
+        specifier: workspace:*
+        version: link:../../packages/orchestrator
 
   packages/ai-context-builder: {}
 
-  packages/ai-gateway: {}
+  packages/ai-gateway:
+    dependencies:
+      '@ai3d/contracts':
+        specifier: workspace:*
+        version: link:../contracts
 
-  packages/application: {}
+  packages/application:
+    dependencies:
+      '@ai3d/orchestrator':
+        specifier: workspace:*
+        version: link:../orchestrator
 
   packages/assets: {}
 
@@ -77,7 +108,20 @@ importers:
 
   packages/observability: {}
 
-  packages/orchestrator: {}
+  packages/orchestrator:
+    dependencies:
+      '@ai3d/ai-gateway':
+        specifier: workspace:*
+        version: link:../ai-gateway
+      '@ai3d/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@ai3d/runtime-protocol':
+        specifier: workspace:*
+        version: link:../runtime-protocol
+      '@ai3d/workflow-engine':
+        specifier: workspace:*
+        version: link:../workflow-engine
 
   packages/plugins: {}
 
@@ -85,7 +129,11 @@ importers:
 
   packages/prompts: {}
 
-  packages/runtime-protocol: {}
+  packages/runtime-protocol:
+    dependencies:
+      '@ai3d/contracts':
+        specifier: workspace:*
+        version: link:../contracts
 
   packages/semantic-graph: {}
 
@@ -107,7 +155,14 @@ importers:
 
   plugins/assets-filesystem: {}
 
-  plugins/engine-blender-local: {}
+  plugins/engine-blender-local:
+    dependencies:
+      '@ai3d/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@ai3d/runtime-protocol':
+        specifier: workspace:*
+        version: link:../../packages/runtime-protocol
 
   plugins/provider-openai: {}
 

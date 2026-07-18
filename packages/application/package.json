@@ -13,6 +13,9 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "@ai3d/orchestrator": "workspace:*"
+  },
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --clean",
     "clean": "rimraf dist",

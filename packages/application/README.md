@@ -2,14 +2,12 @@
 
 Client-facing application commands and queries.
 
-## Milestone 1 status
+## Milestone 2 responsibility
 
-This package is an intentionally empty, documented public-interface boundary. It contains no business logic, infrastructure adapter, AI behavior, Blender integration, or persistence implementation.
+`ApplicationFacade.executePrompt` is the shared desktop/CLI API. It delegates to an
+injected orchestration port and returns a typed execution result. It has no Blender
+or provider dependency.
 
 ## Architectural placement
 
-This package belongs to the framework-independent workspace core and must respect the approved dependency rules.
-
-## Public interface
-
-See [src/index.ts](src/index.ts). Public members are documented before implementation begins.
+Presentation clients call this facade; they must not invoke a runtime directly.

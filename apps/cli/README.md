@@ -1,15 +1,16 @@
 # @ai3d/cli
 
-Command-line presentation client boundary placeholder.
+Command-line presentation client.
 
-## Milestone 1 status
+## Milestone 2 responsibility
 
-This package is an intentionally empty, documented public-interface boundary. It contains no business logic, infrastructure adapter, AI behavior, Blender integration, or persistence implementation.
+The CLI is the runnable composition root for the vertical slice. It wires the
+application facade to injected core services and the local Blender engine, then
+calls the application API.
 
-## Architectural placement
+```powershell
+pnpm --filter @ai3d/cli start -- "Create a cube" --blender "C:\Path\To\blender.exe"
+```
 
-This is a presentation-layer placeholder. It will consume `@ai3d/application` and must not contain business logic.
-
-## Public interface
-
-See [src/index.ts](src/index.ts). Public members are documented before implementation begins.
+The CLI accepts only `Create a cube` and returns a non-zero exit code for any other
+prompt or an invalid Blender path.

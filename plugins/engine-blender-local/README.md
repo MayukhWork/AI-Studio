@@ -1,15 +1,14 @@
 # @ai3d/plugin-engine-blender-local
 
-First-party local Blender execution-engine plugin contract placeholder.
+First-party local Blender execution-engine plugin.
 
-## Milestone 1 status
+## Milestone 2 responsibility
 
-This package is an intentionally empty, documented public-interface boundary. It contains no business logic, infrastructure adapter, AI behavior, Blender integration, or persistence implementation.
+`LocalBlenderRuntime` implements `SceneRuntime` by launching a visible locally
+installed Blender process. The adapter uses a static Python expression bound to the
+single allowlisted `scene.CreateCube@v1` tool; it never accepts prompt text,
+arbitrary operators, or externally supplied scripts.
 
-## Architectural placement
-
-This is a first-party plugin placeholder. It will implement only the relevant core port and will be loaded through `@ai3d/plugins`.
-
-## Public interface
-
-See [src/index.ts](src/index.ts). Public members are documented before implementation begins.
+The bundled add-on and authenticated transport remain future work. They can replace
+the process launcher behind this runtime port without changing the application,
+orchestrator, workflow, or gateway layers.

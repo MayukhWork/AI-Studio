@@ -1,12 +1,12 @@
+import type { CreateCubeToolRequest, CreateCubeToolResult } from '@ai3d/contracts';
+
 /**
- * Public boundary for @ai3d/runtime-protocol.
+ * Engine-neutral execution port used by the orchestrator.
  *
- * This interface is intentionally behavior-free in Milestone 1. Later milestones
- * may add compatible members only after the relevant architecture review.
+ * The local Blender plugin implements this port in Milestone 2. Future local
+ * add-on and remote-worker transports preserve this boundary.
  */
-export interface RuntimeProtocol {
-  /**
-   * Stable identifier of the package boundary.
-   */
-  readonly packageId: '@ai3d/runtime-protocol';
+export interface SceneRuntime {
+  /** Executes the sole typed, allowlisted operation in Milestone 2. */
+  createCube(request: CreateCubeToolRequest): Promise<CreateCubeToolResult>;
 }

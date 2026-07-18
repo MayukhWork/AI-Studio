@@ -2,14 +2,13 @@
 
 Versioned cross-package contract vocabulary.
 
-## Milestone 1 status
+## Milestone 2 responsibility
 
-This package is an intentionally empty, documented public-interface boundary. It contains no business logic, infrastructure adapter, AI behavior, Blender integration, or persistence implementation.
+This package defines the sole allowlisted tool vocabulary:
+`scene.CreateCube@v1`, its typed request/result, and the `create-cube` proposal.
+It remains free of business logic and infrastructure dependencies.
 
 ## Architectural placement
 
-This package belongs to the framework-independent workspace core and must respect the approved dependency rules.
-
-## Public interface
-
-See [src/index.ts](src/index.ts). Public members are documented before implementation begins.
+This package belongs to the framework-independent workspace core and is imported
+by the gateway, orchestrator, runtime protocol, and Blender engine plugin.

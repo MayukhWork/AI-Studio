@@ -2,14 +2,12 @@
 
 Versioned controller/runtime communication contracts.
 
-## Milestone 1 status
+## Milestone 2 responsibility
 
-This package is an intentionally empty, documented public-interface boundary. It contains no business logic, infrastructure adapter, AI behavior, Blender integration, or persistence implementation.
+`SceneRuntime` is the engine-neutral port used by the orchestrator to request one
+typed cube operation. A future Blender add-on transport and remote workers can
+implement this same boundary.
 
 ## Architectural placement
 
-This package belongs to the framework-independent workspace core and must respect the approved dependency rules.
-
-## Public interface
-
-See [src/index.ts](src/index.ts). Public members are documented before implementation begins.
+The protocol exposes no raw Python or arbitrary Blender operator command.

@@ -2,14 +2,12 @@
 
 Provider-neutral structured AI invocation contracts.
 
-## Milestone 1 status
+## Milestone 2 responsibility
 
-This package is an intentionally empty, documented public-interface boundary. It contains no business logic, infrastructure adapter, AI behavior, Blender integration, or persistence implementation.
+`MockAiGateway` is a deterministic provider substitute. It accepts only `Create a
+cube` and returns a typed proposal. It proves the gateway boundary without
+introducing a real model provider, prompt catalog, or planner.
 
 ## Architectural placement
 
-This package belongs to the framework-independent workspace core and must respect the approved dependency rules.
-
-## Public interface
-
-See [src/index.ts](src/index.ts). Public members are documented before implementation begins.
+The orchestrator depends on the `AiGateway` port, never on a specific provider.

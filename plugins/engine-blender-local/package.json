@@ -13,6 +13,10 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "@ai3d/contracts": "workspace:*",
+    "@ai3d/runtime-protocol": "workspace:*"
+  },
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --clean",
     "clean": "rimraf dist",
