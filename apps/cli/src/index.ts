@@ -1,9 +1,25 @@
+import { config } from 'dotenv';
+import { fileURLToPath } from 'node:url';
+
 import { ApplicationFacade } from '@ai3d/application';
 import { MockAiGateway } from '@ai3d/ai-gateway';
 import { DefaultExecutionOrchestrator } from '@ai3d/orchestrator';
 import { LocalBlenderRuntime } from '@ai3d/plugin-engine-blender-local';
 import { OpenAiGateway } from '@ai3d/plugin-provider-openai';
 import { InMemoryWorkflowEngine } from '@ai3d/workflow-engine';
+
+loadCliEnvironment();
+
+/**
+ * Loads the repository-root environment file for the CLI process.
+ *
+ * Existing operating-system environment variables take precedence over `.env`,
+ * which keeps CI and shell-based configuration working unchanged.
+ */
+function loadCliEnvironment(): void {
+  const environmentPath = fileURLToPath(new URL('../../../.env', import.meta.url));
+  config({ path: environmentPath });
+}
 
 /** Parsed arguments for a local scene-generation command. */
 export interface CreateCubeCliOptions {
@@ -26,7 +42,10 @@ export function createMilestone2Application(blenderExecutablePath: string): Appl
 }
 
 /** Creates the application composition that uses the configured OpenAI provider. */
-export function createOpenAiApplication(blenderExecutablePath: string, apiKey: string): ApplicationFacade {
+export function createOpenAiApplication(
+  blenderExecutablePath: string,
+  apiKey: string,
+): ApplicationFacade {
   const runtime = new LocalBlenderRuntime({ blenderExecutablePath });
   const model = process.env.OPENAI_MODEL;
   const orchestrator = new DefaultExecutionOrchestrator({
@@ -64,7 +83,9 @@ export async function runCli(argumentsList: readonly string[]): Promise<number> 
     const application = createOpenAiApplication(options.blenderExecutablePath, apiKey);
     const result = await application.executePrompt({ prompt: options.prompt });
 
-    console.log(`Completed ${result.toolResult.toolId}; Blender is opening with the generated scene.`);
+    console.log(
+      `Completed ${result.toolResult.toolId}; Blender is opening with the generated scene.`,
+    );
     return 0;
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown command failure.';
