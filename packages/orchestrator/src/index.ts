@@ -1,4 +1,9 @@
-import { createCubeToolId, type CreateCubeToolResult, type SceneProposal } from '@ai3d/contracts';
+import {
+  createCubeToolId,
+  createSceneToolId,
+  type SceneProposal,
+  type SceneToolResult,
+} from '@ai3d/contracts';
 import type { AiGateway } from '@ai3d/ai-gateway';
 import type { SceneRuntime } from '@ai3d/runtime-protocol';
 import type { InMemoryWorkflowEngine } from '@ai3d/workflow-engine';
@@ -16,7 +21,7 @@ export interface ExecutePromptResult {
   /** Structured AI proposal used to select the operation. */
   readonly proposal: SceneProposal;
   /** Result returned by the runtime after the typed tool request. */
-  readonly toolResult: CreateCubeToolResult;
+  readonly toolResult: SceneToolResult;
 }
 
 /** Dependencies supplied by the composition root. */
@@ -48,14 +53,26 @@ export class DefaultExecutionOrchestrator {
     proposal: SceneProposal,
     correlationId: string,
   ): Promise<ExecutePromptResult> {
-    const workflowResult = await this.dependencies.workflowEngine.run({
-      name: proposal.kind,
-      run: () =>
-        this.dependencies.runtime.createCube({
-          toolId: createCubeToolId,
-          correlationId,
-        }),
-    });
+    const workflowResult = await this.dependencies.workflowEngine.run<SceneToolResult>(
+      proposal.kind === 'create-cube'
+        ? {
+            name: proposal.kind,
+            run: () =>
+              this.dependencies.runtime.createCube({
+                toolId: createCubeToolId,
+                correlationId,
+              }),
+          }
+        : {
+            name: proposal.kind,
+            run: () =>
+              this.dependencies.runtime.createScene({
+                toolId: createSceneToolId,
+                correlationId,
+                scene: proposal.scene,
+              }),
+          },
+    );
 
     return {
       proposal,

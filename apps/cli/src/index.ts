@@ -2,9 +2,10 @@ import { ApplicationFacade } from '@ai3d/application';
 import { MockAiGateway } from '@ai3d/ai-gateway';
 import { DefaultExecutionOrchestrator } from '@ai3d/orchestrator';
 import { LocalBlenderRuntime } from '@ai3d/plugin-engine-blender-local';
+import { OpenAiGateway } from '@ai3d/plugin-provider-openai';
 import { InMemoryWorkflowEngine } from '@ai3d/workflow-engine';
 
-/** Parsed arguments for the Milestone 2 demonstration command. */
+/** Parsed arguments for a local scene-generation command. */
 export interface CreateCubeCliOptions {
   /** The only accepted natural-language prompt. */
   readonly prompt: string;
@@ -12,11 +13,24 @@ export interface CreateCubeCliOptions {
   readonly blenderExecutablePath: string;
 }
 
-/** Creates the complete Milestone 2 application composition. */
+/** Creates the backward-compatible deterministic cube demonstration. */
 export function createMilestone2Application(blenderExecutablePath: string): ApplicationFacade {
   const runtime = new LocalBlenderRuntime({ blenderExecutablePath });
   const orchestrator = new DefaultExecutionOrchestrator({
     aiGateway: new MockAiGateway(),
+    workflowEngine: new InMemoryWorkflowEngine(),
+    runtime,
+  });
+
+  return new ApplicationFacade(orchestrator);
+}
+
+/** Creates the application composition that uses the configured OpenAI provider. */
+export function createOpenAiApplication(blenderExecutablePath: string, apiKey: string): ApplicationFacade {
+  const runtime = new LocalBlenderRuntime({ blenderExecutablePath });
+  const model = process.env.OPENAI_MODEL;
+  const orchestrator = new DefaultExecutionOrchestrator({
+    aiGateway: new OpenAiGateway({ apiKey, ...(model === undefined ? {} : { model }) }),
     workflowEngine: new InMemoryWorkflowEngine(),
     runtime,
   });
@@ -42,10 +56,15 @@ export function parseCreateCubeCliOptions(argumentsList: readonly string[]): Cre
 export async function runCli(argumentsList: readonly string[]): Promise<number> {
   try {
     const options = parseCreateCubeCliOptions(argumentsList);
-    const application = createMilestone2Application(options.blenderExecutablePath);
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (apiKey === undefined || apiKey.length === 0) {
+      throw new Error('OPENAI_API_KEY must be configured to generate a scene.');
+    }
+
+    const application = createOpenAiApplication(options.blenderExecutablePath, apiKey);
     const result = await application.executePrompt({ prompt: options.prompt });
 
-    console.log(`Completed ${result.toolResult.toolId}; Blender is opening with one cube.`);
+    console.log(`Completed ${result.toolResult.toolId}; Blender is opening with the generated scene.`);
     return 0;
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown command failure.';

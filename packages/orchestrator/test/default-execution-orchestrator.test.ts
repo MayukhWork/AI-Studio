@@ -19,6 +19,11 @@ describe('DefaultExecutionOrchestrator', () => {
           status: 'completed',
         };
       },
+      createScene: async (request) => ({
+        toolId: request.toolId,
+        correlationId: request.correlationId,
+        status: 'completed',
+      }),
     };
     const orchestrator = new DefaultExecutionOrchestrator({
       aiGateway: new MockAiGateway(),

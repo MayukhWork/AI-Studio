@@ -1,4 +1,9 @@
-import type { CreateCubeToolRequest, CreateCubeToolResult } from '@ai3d/contracts';
+import type {
+  CreateCubeToolRequest,
+  CreateCubeToolResult,
+  CreateSceneToolRequest,
+  CreateSceneToolResult,
+} from '@ai3d/contracts';
 
 /**
  * Engine-neutral execution port used by the orchestrator.
@@ -9,4 +14,6 @@ import type { CreateCubeToolRequest, CreateCubeToolResult } from '@ai3d/contract
 export interface SceneRuntime {
   /** Executes the sole typed, allowlisted operation in Milestone 2. */
   createCube(request: CreateCubeToolRequest): Promise<CreateCubeToolResult>;
+  /** Translates a validated declarative scene plan into engine-specific work. */
+  createScene(request: CreateSceneToolRequest): Promise<CreateSceneToolResult>;
 }

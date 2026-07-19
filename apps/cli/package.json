@@ -21,6 +21,7 @@
     "@ai3d/application": "workspace:*",
     "@ai3d/orchestrator": "workspace:*",
     "@ai3d/plugin-engine-blender-local": "workspace:*",
+    "@ai3d/plugin-provider-openai": "workspace:*",
     "@ai3d/workflow-engine": "workspace:*"
   },
   "scripts": {
