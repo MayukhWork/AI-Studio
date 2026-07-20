@@ -57,9 +57,16 @@ export class OpenAiGateway implements AiGateway {
       }),
     });
 
+    // if (!response.ok) {
+    //   throw new OpenAiPlanningError(`OpenAI planning request failed with status ${response.status}.`);
+    // }
     if (!response.ok) {
-      throw new OpenAiPlanningError(`OpenAI planning request failed with status ${response.status}.`);
-    }
+  const body = await response.text();
+
+  throw new Error(
+    `OpenAI Error\nStatus: ${response.status}\nBody: ${body}`
+  );
+}
 
     const responseBody: unknown = await response.json();
     const outputText = extractOutputText(responseBody);
@@ -114,14 +121,22 @@ const sceneProposalJsonSchema = {
   additionalProperties: false,
   required: ['kind', 'scene'],
   properties: {
-    kind: { const: 'create-scene' },
+    kind: {
+      type: 'string',
+      const: 'create-scene',
+    },
     scene: {
       type: 'object',
       additionalProperties: false,
       required: ['version', 'summary', 'objects', 'lights', 'camera'],
       properties: {
-        version: { const: 'v1' },
-        summary: { type: 'string' },
+        version: {
+          type: 'string',
+          const: 'v1',
+        },
+        summary: {
+          type: 'string',
+        },
         objects: {
           type: 'array',
           minItems: 1,
@@ -129,10 +144,15 @@ const sceneProposalJsonSchema = {
           items: {
             type: 'object',
             additionalProperties: false,
-            required: ['name', 'primitive', 'transform'],
+            required: ['name', 'primitive', 'transform', 'material'],
             properties: {
-              name: { type: 'string' },
-              primitive: { enum: ['cube', 'sphere', 'cylinder'] },
+              name: {
+                type: 'string',
+              },
+              primitive: {
+                type: 'string',
+                enum: ['cube', 'sphere', 'cylinder'],
+              },
               transform: {
                 type: 'object',
                 additionalProperties: false,
@@ -149,8 +169,12 @@ const sceneProposalJsonSchema = {
                 required: ['color', 'metallic', 'roughness'],
                 properties: {
                   color: vector3Schema,
-                  metallic: { type: 'number' },
-                  roughness: { type: 'number' },
+                  metallic: {
+                    type: 'number',
+                  },
+                  roughness: {
+                    type: 'number',
+                  },
                 },
               },
             },
@@ -162,15 +186,32 @@ const sceneProposalJsonSchema = {
           items: {
             type: 'object',
             additionalProperties: false,
-            required: ['name', 'type', 'location', 'rotation', 'color', 'energy', 'size'],
+            required: [
+              'name',
+              'type',
+              'location',
+              'rotation',
+              'color',
+              'energy',
+              'size',
+            ],
             properties: {
-              name: { type: 'string' },
-              type: { enum: ['point', 'area', 'sun'] },
+              name: {
+                type: 'string',
+              },
+              type: {
+                type: 'string',
+                enum: ['point', 'area', 'sun'],
+              },
               location: vector3Schema,
               rotation: vector3Schema,
               color: vector3Schema,
-              energy: { type: 'number' },
-              size: { type: 'number' },
+              energy: {
+                type: 'number',
+              },
+              size: {
+                type: 'number',
+              },
             },
           },
         },
@@ -181,7 +222,9 @@ const sceneProposalJsonSchema = {
           properties: {
             location: vector3Schema,
             rotation: vector3Schema,
-            lens: { type: 'number' },
+            lens: {
+              type: 'number',
+            },
           },
         },
       },
