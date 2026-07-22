@@ -2,10 +2,10 @@ import { config } from 'dotenv';
 import { fileURLToPath } from 'node:url';
 
 import { ApplicationFacade } from '@ai3d/application';
+import { AiGatewayFactory } from '@ai3d/gateway-factory';
 import { MockAiGateway } from '@ai3d/ai-gateway';
 import { DefaultExecutionOrchestrator } from '@ai3d/orchestrator';
 import { LocalBlenderRuntime } from '@ai3d/plugin-engine-blender-local';
-import { OpenAiGateway } from '@ai3d/plugin-provider-openai';
 import { InMemoryWorkflowEngine } from '@ai3d/workflow-engine';
 
 loadCliEnvironment();
@@ -41,15 +41,11 @@ export function createMilestone2Application(blenderExecutablePath: string): Appl
   return new ApplicationFacade(orchestrator);
 }
 
-/** Creates the application composition that uses the configured OpenAI provider. */
-export function createOpenAiApplication(
-  blenderExecutablePath: string,
-  apiKey: string,
-): ApplicationFacade {
+/** Creates the application composition using the environment-selected provider. */
+export function createConfiguredApplication(blenderExecutablePath: string): ApplicationFacade {
   const runtime = new LocalBlenderRuntime({ blenderExecutablePath });
-  const model = process.env.OPENAI_MODEL;
   const orchestrator = new DefaultExecutionOrchestrator({
-    aiGateway: new OpenAiGateway({ apiKey, ...(model === undefined ? {} : { model }) }),
+    aiGateway: AiGatewayFactory.fromEnvironment(),
     workflowEngine: new InMemoryWorkflowEngine(),
     runtime,
   });
@@ -75,12 +71,7 @@ export function parseCreateCubeCliOptions(argumentsList: readonly string[]): Cre
 export async function runCli(argumentsList: readonly string[]): Promise<number> {
   try {
     const options = parseCreateCubeCliOptions(argumentsList);
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (apiKey === undefined || apiKey.length === 0) {
-      throw new Error('OPENAI_API_KEY must be configured to generate a scene.');
-    }
-
-    const application = createOpenAiApplication(options.blenderExecutablePath, apiKey);
+    const application = createConfiguredApplication(options.blenderExecutablePath);
     const result = await application.executePrompt({ prompt: options.prompt });
 
     console.log(

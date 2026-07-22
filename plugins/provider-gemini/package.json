@@ -1,12 +1,9 @@
 {
-  "name": "@ai3d/cli",
+  "name": "@ai3d/plugin-provider-gemini",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Command-line presentation client boundary placeholder.",
-  "bin": {
-    "ai3d-create-cube": "./dist/index.js"
-  },
+  "description": "First-party Gemini provider plugin.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -18,19 +15,13 @@
   ],
   "dependencies": {
     "@ai3d/ai-gateway": "workspace:*",
-    "@ai3d/application": "workspace:*",
-    "@ai3d/gateway-factory": "workspace:*",
-    "@ai3d/orchestrator": "workspace:*",
-    "@ai3d/plugin-engine-blender-local": "workspace:*",
-    "@ai3d/workflow-engine": "workspace:*",
-    "dotenv": "^16.6.1"
+    "@ai3d/contracts": "workspace:*"
   },
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --clean",
     "clean": "rimraf dist",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "start": "node dist/index.js",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "typecheck": "tsc --noEmit"

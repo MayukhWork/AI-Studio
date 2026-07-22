@@ -61,15 +61,15 @@ importers:
       '@ai3d/application':
         specifier: workspace:*
         version: link:../../packages/application
+      '@ai3d/gateway-factory':
+        specifier: workspace:*
+        version: link:../../packages/gateway-factory
       '@ai3d/orchestrator':
         specifier: workspace:*
         version: link:../../packages/orchestrator
       '@ai3d/plugin-engine-blender-local':
         specifier: workspace:*
         version: link:../../plugins/engine-blender-local
-      '@ai3d/plugin-provider-openai':
-        specifier: workspace:*
-        version: link:../../plugins/provider-openai
       '@ai3d/workflow-engine':
         specifier: workspace:*
         version: link:../../packages/workflow-engine
@@ -109,6 +109,18 @@ importers:
   packages/domain: {}
 
   packages/event-bus: {}
+
+  packages/gateway-factory:
+    dependencies:
+      '@ai3d/ai-gateway':
+        specifier: workspace:*
+        version: link:../ai-gateway
+      '@ai3d/plugin-provider-gemini':
+        specifier: workspace:*
+        version: link:../../plugins/provider-gemini
+      '@ai3d/plugin-provider-openai':
+        specifier: workspace:*
+        version: link:../../plugins/provider-openai
 
   packages/memory: {}
 
@@ -169,6 +181,15 @@ importers:
       '@ai3d/runtime-protocol':
         specifier: workspace:*
         version: link:../../packages/runtime-protocol
+
+  plugins/provider-gemini:
+    dependencies:
+      '@ai3d/ai-gateway':
+        specifier: workspace:*
+        version: link:../../packages/ai-gateway
+      '@ai3d/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
 
   plugins/provider-openai:
     dependencies:
