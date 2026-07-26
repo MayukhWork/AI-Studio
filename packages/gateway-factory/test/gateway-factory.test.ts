@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { GeminiGateway } from '@ai3d/plugin-provider-gemini';
 import { OpenAiGateway } from '@ai3d/plugin-provider-openai';
 
 import {
@@ -37,6 +38,16 @@ describe('AiGatewayFactory', () => {
     expect(AiGatewayFactory.fromEnvironment({ OPENAI_API_KEY: 'openai-key' })).toBeInstanceOf(
       OpenAiGateway,
     );
+  });
+
+  it('creates Gemini when the Gemini provider is selected', () => {
+    expect(
+      AiGatewayFactory.fromEnvironment({
+        LLM_PROVIDER: 'gemini',
+        GEMINI_API_KEY: 'gemini-key',
+        GEMINI_MODEL: 'gemini-test-model',
+      }),
+    ).toBeInstanceOf(GeminiGateway);
   });
 });
 

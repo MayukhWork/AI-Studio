@@ -39,8 +39,11 @@
     "vitest": "^3.2.4"
   },
   "lint-staged": {
-    "*.{ts,mts,cts}": [
+    "**/src/**/*.{ts,mts,cts}": [
       "eslint --fix",
+      "prettier --write"
+    ],
+    "**/test/**/*.{ts,mts,cts}": [
       "prettier --write"
     ],
     "*.{json,yaml,yml,md}": [

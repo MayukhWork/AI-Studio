@@ -1,5 +1,6 @@
 import { parseSceneProposal, type SceneProposal } from '@ai3d/contracts';
 import type { AiGateway, ProposeSceneRequest } from '@ai3d/ai-gateway';
+import { scenePlanV1Instructions, sceneProposalV1JsonSchema } from '@ai3d/prompts';
 
 /** Configuration for the first-party OpenAI provider adapter. */
 export interface OpenAiGatewayOptions {
@@ -44,14 +45,14 @@ export class OpenAiGateway implements AiGateway {
       },
       body: JSON.stringify({
         model: this.model,
-        instructions: scenePlanningInstructions,
+        instructions: scenePlanV1Instructions,
         input: request.prompt,
         text: {
           format: {
             type: 'json_schema',
             name: 'scene_plan_v1',
             strict: true,
-            schema: sceneProposalJsonSchema,
+            schema: sceneProposalV1JsonSchema,
           },
         },
       }),
@@ -61,12 +62,10 @@ export class OpenAiGateway implements AiGateway {
     //   throw new OpenAiPlanningError(`OpenAI planning request failed with status ${response.status}.`);
     // }
     if (!response.ok) {
-  const body = await response.text();
+      const body = await response.text();
 
-  throw new Error(
-    `OpenAI Error\nStatus: ${response.status}\nBody: ${body}`
-  );
-}
+      throw new Error(`OpenAI Error\nStatus: ${response.status}\nBody: ${body}`);
+    }
 
     const responseBody: unknown = await response.json();
     const outputText = extractOutputText(responseBody);
@@ -92,7 +91,11 @@ function extractOutputText(value: unknown): string {
     for (const item of value.output) {
       if (isRecord(item) && Array.isArray(item.content)) {
         for (const content of item.content) {
-          if (isRecord(content) && content.type === 'output_text' && typeof content.text === 'string') {
+          if (
+            isRecord(content) &&
+            content.type === 'output_text' &&
+            typeof content.text === 'string'
+          ) {
             return content.text;
           }
         }
@@ -106,128 +109,3 @@ function extractOutputText(value: unknown): string {
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
-
-const scenePlanningInstructions = `You are AI Studio's planning component. Convert the user's request into a ScenePlan v1. Return only schema-valid JSON. Do not return Blender Python, code, operators, markdown, assets, animation, or unsupported primitives. Use cubes, spheres, and cylinders compositionally. Include a camera and lights. Keep object count at or below 60 and use materials to communicate the requested style.`;
-
-const vector3Schema = {
-  type: 'array',
-  items: { type: 'number' },
-  minItems: 3,
-  maxItems: 3,
-} as const;
-
-const sceneProposalJsonSchema = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['kind', 'scene'],
-  properties: {
-    kind: {
-      type: 'string',
-      const: 'create-scene',
-    },
-    scene: {
-      type: 'object',
-      additionalProperties: false,
-      required: ['version', 'summary', 'objects', 'lights', 'camera'],
-      properties: {
-        version: {
-          type: 'string',
-          const: 'v1',
-        },
-        summary: {
-          type: 'string',
-        },
-        objects: {
-          type: 'array',
-          minItems: 1,
-          maxItems: 60,
-          items: {
-            type: 'object',
-            additionalProperties: false,
-            required: ['name', 'primitive', 'transform', 'material'],
-            properties: {
-              name: {
-                type: 'string',
-              },
-              primitive: {
-                type: 'string',
-                enum: ['cube', 'sphere', 'cylinder'],
-              },
-              transform: {
-                type: 'object',
-                additionalProperties: false,
-                required: ['location', 'rotation', 'scale'],
-                properties: {
-                  location: vector3Schema,
-                  rotation: vector3Schema,
-                  scale: vector3Schema,
-                },
-              },
-              material: {
-                type: 'object',
-                additionalProperties: false,
-                required: ['color', 'metallic', 'roughness'],
-                properties: {
-                  color: vector3Schema,
-                  metallic: {
-                    type: 'number',
-                  },
-                  roughness: {
-                    type: 'number',
-                  },
-                },
-              },
-            },
-          },
-        },
-        lights: {
-          type: 'array',
-          maxItems: 8,
-          items: {
-            type: 'object',
-            additionalProperties: false,
-            required: [
-              'name',
-              'type',
-              'location',
-              'rotation',
-              'color',
-              'energy',
-              'size',
-            ],
-            properties: {
-              name: {
-                type: 'string',
-              },
-              type: {
-                type: 'string',
-                enum: ['point', 'area', 'sun'],
-              },
-              location: vector3Schema,
-              rotation: vector3Schema,
-              color: vector3Schema,
-              energy: {
-                type: 'number',
-              },
-              size: {
-                type: 'number',
-              },
-            },
-          },
-        },
-        camera: {
-          type: 'object',
-          additionalProperties: false,
-          required: ['location', 'rotation', 'lens'],
-          properties: {
-            location: vector3Schema,
-            rotation: vector3Schema,
-            lens: {
-              type: 'number',
-            },
-          },
-        },
-      },
-    },
-  },
-} as const;

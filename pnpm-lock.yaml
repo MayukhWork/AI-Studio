@@ -190,6 +190,9 @@ importers:
       '@ai3d/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@ai3d/prompts':
+        specifier: workspace:*
+        version: link:../../packages/prompts
 
   plugins/provider-openai:
     dependencies:
@@ -199,6 +202,9 @@ importers:
       '@ai3d/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@ai3d/prompts':
+        specifier: workspace:*
+        version: link:../../packages/prompts
 
   plugins/storage-sqlite: {}
 
