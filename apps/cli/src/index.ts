@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { ApplicationFacade } from '@ai3d/application';
 import { AiGatewayFactory } from '@ai3d/gateway-factory';
@@ -85,7 +85,15 @@ export async function runCli(argumentsList: readonly string[]): Promise<number> 
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+/** Determines whether this module was invoked as the CLI entrypoint. */
+export function isCliEntrypoint(
+  moduleUrl: string,
+  entrypointPath: string | undefined = process.argv[1],
+): boolean {
+  return entrypointPath !== undefined && moduleUrl === pathToFileURL(entrypointPath).href;
+}
+
+if (isCliEntrypoint(import.meta.url)) {
   const exitCode = await runCli(process.argv.slice(2));
   process.exitCode = exitCode;
 }
