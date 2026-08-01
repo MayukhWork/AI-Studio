@@ -36,7 +36,6 @@ export const sceneProposalV1JsonSchema = {
         objects: {
           type: 'array',
           minItems: 1,
-          maxItems: 60,
           items: {
             type: 'object',
             additionalProperties: false,
