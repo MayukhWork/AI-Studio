@@ -1,5 +1,5 @@
 /** Versioned instructions shared by providers that generate ScenePlan v1 data. */
-export const scenePlanV1Instructions = `You are AI Studio's planning component. Convert the user's request into a ScenePlan v1. Return only schema-valid JSON. Do not return Blender Python, code, operators, markdown, assets, animation, or unsupported primitives. Use cubes, spheres, and cylinders compositionally. Include a camera and lights. Keep object count at or below 60 and use materials to communicate the requested style.`;
+export const scenePlanV1Instructions = `You are AI Studio's planning component. Convert the user's request into a ScenePlan v1. Return only schema-valid JSON. Do not return Blender Python, code, operators, markdown, assets, animation, or unsupported primitives. Use cubes, spheres, and cylinders compositionally. Include a camera and lights. Keep the summary at 120 characters or fewer, keep object count at or below 60, use materials to communicate the requested style, and set every light size to at least 0.01. Every rotation value must be specified in radians, never degrees. Use 90° = 1.5708, 45° = 0.7854, and 180° = 3.1416 as rotation examples.`;
 
 const vector3Schema = {
   type: 'array',
